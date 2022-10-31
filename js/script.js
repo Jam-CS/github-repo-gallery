@@ -3,6 +3,8 @@ const username = "Jam-CS";
 const repoList = document.querySelector (".repo-list"); //Select the unordered list to display the repos list
 const reposSection = document.querySelector (".repos"); //Select where all the repo information appears
 const eachRepoData = document.querySelector (".repo-data"); //individual repo data will appear
+const repoGalleryButton = document.querySelector (".view-repos") //select repo gallery button
+const filterInput = document.querySelector (".filter-repos") //search by name
 
 const githubProfile = async function (){
     const userInfo = await fetch(`https://api.github.com/users/${username}`);
@@ -38,6 +40,7 @@ const myRepos = async function(){
 };
 
 const fetchRepos = function (repos) {
+  filterInput.classList.remove ("hide");
   for (const repo of repos) {
     const repoItem = document.createElement("li");
     repoItem.classList.add("repo");
@@ -75,6 +78,7 @@ const displayRepoInfo = function (repoInfo, languages){
   eachRepoData.innerHTML = "";
   eachRepoData.classList.remove ("hide");
   reposSection.classList.add("hide");
+  repoGalleryButton.classList.remove("hide");
 
   const div = document.createElement ("div");
   div.innerHTML = `<h3>Name: ${repoInfo.name}</h3>
@@ -85,4 +89,26 @@ const displayRepoInfo = function (repoInfo, languages){
   eachRepoData.append(div);
 };
 
+repoGalleryButton.addEventListener ("click", function(){
+  reposSection.classList.remove ("hide");
+  eachRepoData.classList.add ("hide");
+  repoGalleryButton.classList.add ("hide");
+});
+
+//search
+filterInput.addEventListener ("input", function(e){
+  const searchText = e.target.value;
+  const repos = document.querySelectorAll (".repo");
+  const textLowercase = searchText.toLowerCase();
+
+  for (const repo of repos) {
+    const repoLowerText = repo.innerText.toLowerCase();
+     if (repoLowerText.includes(textLowercase)) {
+      repo.classList.remove ("hide")
+     } else{
+      repo.classList.add ("hide")
+     }
+  }
+
+});
 
